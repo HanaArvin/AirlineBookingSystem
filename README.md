@@ -1,4 +1,4 @@
-# Airline Management System
+# Airline Booking System
 
 A simple Java-based Airline Management System Allows passengers to view flights, book or cancel tickets, manage wallet balance, and admin to manage flights and view passengers.
 
