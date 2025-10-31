@@ -1,20 +1,36 @@
-import java.util.ArrayList;
-import java.util.List;
+package ui;
 
-public class DataHandler {
-    private static List<Passenger> allPassengers=new ArrayList<>();
-    private static List<Flight> allFlights=new ArrayList<>();
-    public static Passenger currentPassenger=null;
+import model.Admin;
+import service.AirlineService;
 
-    public static void setAllPassengers(List<Passenger> allPassengers) {
-        DataHandler.allPassengers = allPassengers;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class UIHandler {
+    Scanner scanner=new Scanner(System.in);
+    AirlineService airlineService=new AirlineService();
+    public UIHandler(){
+        System.out.println(artWork);
     }
-
-    public static void setAllFlights(List<Flight> allFlights) {
-        DataHandler.allFlights = allFlights;
-    }
-
-    public static void displayArtWork(int number){
+    String artWork = """
+                  
+                                                                                                   |
+                                                                                             --====|====--
+                                                                                                   | \s
+                            
+                                                                                               .-""\"""-.\s
+                                                                                             .'_________'.\s
+                                                                                            /_/_|__|__|_\\_\\
+                                                                                           ;'-._       _.-';
+                                                                      ,--------------------|    `-. .-'    |--------------------,
+                                                                       ``""--..__    ___   ;       '       ;   ___    __..--""``
+                                                                                 `"-// \\\\.._\\             /_..// \\\\-"`
+                                                                                    \\\\_//    '._       _.'    \\\\_//
+                                                                                     `"`        ``---``        `"`
+                   
+                                                                      ++++++++++++++++ Welcome to Airlines System ++++++++++++++++
+                """;
+      void displayArtWork(int number){
         String artWork="";
         if (number==1){
             artWork= """
@@ -59,7 +75,7 @@ public class DataHandler {
         System.out.println(artWork);
     }
 
-    public static void displayArtWork2(int number) {
+    void displayArtWork2(int number) {
         String artWork = "";
         if (number == 1) {
             artWork = """
@@ -139,196 +155,183 @@ public class DataHandler {
         System.out.println(artWork);
     }
 
-    public static boolean passengerLogin(String phonenumber, String password) {
-        for (int i = 0; i < allPassengers.size(); i++) {
-            if (allPassengers.get(i).checkUp(phonenumber, password)) {
-                 currentPassenger = allPassengers.get(i);
-                return true;
-            }
-        }
-        return false;
+    void menu() {
+        System.out.println("\n\t\t\t\t\t ============MENU============");
+        System.out.println("\t\t\t\t\t 1-> Log In");
+        System.out.println("\t\t\t\t\t 2-> Sign Up");
+        System.out.println("\t\t\t\t\t 3-> Admin panel");
+        System.out.println("\t\t\t\t\t 4-> Exit");
+        System.out.print("\t\t\t\t\t Enter your choice: ");
+    }
+    void passengerMenu(){
+        System.out.println("\n\t\t\t\t\t\t\t\t\t\t\t\t\t======PASSENGER MENU======\n");
+        System.out.println("\t\t\t\t\t 1-> Display flight schedule");
+        System.out.println("\t\t\t\t\t 2-> Book a flight");
+        System.out.println("\t\t\t\t\t 3-> View booked flights");
+        System.out.println("\t\t\t\t\t 4-> Cancel a flight");
+        System.out.println("\t\t\t\t\t 5-> View wallet balance");
+        System.out.println("\t\t\t\t\t 6-> Recharge wallet");
+        System.out.println("\t\t\t\t\t 7-> Logout");
+        System.out.print("Enter your choice: ");
     }
 
-    public static void createPassengerAcc(String phoneNumber, String fullName, String password, String address, double wallet) {
-        Passenger temp = new Passenger(phoneNumber, password, fullName, address, wallet);
-        allPassengers.add(temp);
-        FileHandler.savePassengers(allPassengers,"passengers.txt");
+    void createPassengr(Scanner scanner) {
+        scanner.nextLine();
+        System.out.print("Enter your phone number: ");
+        String newPhoneNumber = scanner.nextLine();
+        System.out.print("Enter your full name: ");
+        String newFullName = scanner.nextLine();
+        System.out.print("Enter your password: ");
+        String newPassword = scanner.nextLine();
+        System.out.print("Enter your address: ");
+        String newAddress = scanner.nextLine();
+        System.out.print("Enter wallet amount: ");
+        double newWallet = scanner.nextDouble();
+        scanner.nextLine();
+        airlineService.createPassengerAcc(newPhoneNumber, newFullName, newPassword, newAddress, newWallet);
+        System.out.println("\nYour account has been created successfully!\nPlease login to continue.\n");
     }
-
-    public  static boolean viewFlights(){
-        if (allFlights.isEmpty()){
-            System.out.println("\nNo flights are currently available.\n");
-            return false;
-
-        } else {
-            System.out.println("+-----+------------+---------------+---------------+-----------------------+-----------------------+-----------+------------------+-----------+");
-            System.out.printf("| %-3s | %-10s | %-13s | %-13s | %-21s | %-21s | %-9s | %-16s | %-9s |%n",
-                    "No", "Flight ID", "From", "To", "Departure time", "Arrival time", "Price", "Available seats", "Capacity");
-            System.out.println("+=====+============+===============+===============+=======================+=======================+===========+==================+===========+");
-            for (int i = 0; i < allFlights.size(); i++) {
-                Flight f = allFlights.get(i);
-                System.out.printf("| %-3d | %-10s | %-13s | %-13s | %-21s | %-21s | %-9s | %-16s | %-9s |%n",
-                        (i + 1),
-                        f.getFlightId(),
-                        f.getOrigin(),
-                        f.getDestination(),
-                        f.getDepartureTime(),
-                        f.getArrivalTime(),
-                        f.getPrice() + "$",
-                        f.getAvailableSeats(),
-                        f.getCapacity()
-                );
-                System.out.println("+-----+------------+---------------+---------------+-----------------------+-----------------------+-----------+------------------+-----------+");
-            }
-            return true;
-        }
+    void adminMenu(){
+        System.out.println("\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t======ADMIN PANEL======\n");
+        System.out.println("\t\t\t\t\t 1-> Add flight");
+        System.out.println("\t\t\t\t\t 2-> Remove flight");
+        System.out.println("\t\t\t\t\t 3-> Display flight schedule");
+        System.out.println("\t\t\t\t\t 4-> Display Registered Passengers");
+        System.out.println("\t\t\t\t\t 5-> Logout");
+        System.out.print("Choose option: ");
     }
-
-    public static void bookTicket(String flightId){
-        for (int i = 0; i < allFlights.size(); i++) {
-            if (allFlights.get(i).getFlightId().equals(flightId)){
-                if (allFlights.get(i).getAvailableSeats()>0){
-                    if (currentPassenger.getWallet()>=allFlights.get(i).getPrice()){
-                        System.out.println("\nTicket booked successfully!");
-                        allFlights.get(i).setAvailableSeats(allFlights.get(i).getAvailableSeats() - 1);
-                        currentPassenger.setWallet(currentPassenger.getWallet() - allFlights.get(i).getPrice());
-                        currentPassenger.getBookedFlights().add(flightId);
-                        FileHandler.savePassengers(allPassengers,"passengers.txt");
-                        FileHandler.saveFlights(allFlights, "flights.txt");
-                        return;
-                    } else {
-                        System.out.println("\nYou don't have enough balance.");
-                        return;
+    void passenger(Scanner scanner){
+        while (true) {
+            passengerMenu();
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                displayArtWork2(choice);
+                if (choice == 1) {
+                    System.out.println();
+                    airlineService.viewFlights();
+                } else if (choice == 2) {
+                    if (airlineService.viewFlights()){
+                        System.out.print("Enter flight ID you want to book: \n");
+                        String bTicketNumber = scanner.next();
+                        airlineService.bookTicket(bTicketNumber);
                     }
-                } else {
-                    System.out.println("This flight has no capacity.");
-                    return;
-
-                }
-            }
-
-        }
-        System.out.println("\nNo flight found with this ID");
-    }
-
-    public static void rechargeWallet(double rechargeAmount){
-        if (rechargeAmount<=0){
-            System.out.println("\nPlease enter a positive number.");
-            return;
-        }
-        currentPassenger.setWallet(currentPassenger.getWallet()+rechargeAmount);
-        System.out.println("\nWallet recharged successfully.\n");
-        FileHandler.savePassengers(allPassengers,"passengers.txt");
-
-    }
-
-    public static void cancelTicket(String flightId) {
-        for (int i = 0; i < allFlights.size(); i++) {
-            if (allFlights.get(i).getFlightId().equals(flightId)) {
-                if (currentPassenger.getBookedFlights().contains(flightId)) {
-                    System.out.println("\nTicket canceled successfully!");
-                    allFlights.get(i).setAvailableSeats(allFlights.get(i).getAvailableSeats() + 1);
-                    currentPassenger.setWallet(currentPassenger.getWallet() + allFlights.get(i).getPrice());
-                    currentPassenger.getBookedFlights().remove(flightId);
-                    FileHandler.savePassengers(allPassengers,"passengers.txt");
-                    FileHandler.saveFlights(allFlights, "flights.txt");
-                    return;
-                } else {
-                    System.out.println("You don’t have a ticket for this flight!");
-                    return;
-                }
-            }
-        }
-        System.out.println("No flight found with this ID!");
-    }
-
-    public static boolean adminLogin(String phonenumber,String password){
-        return Admin.getPhonenumber().equals(phonenumber) && Admin.getPassword().equals(password);
-    }
-
-    public static void addFlight(String flightId,String origin,String destination,String departureTime,String arrivalTime,int capacity,double price ){
-        Flight temp=new Flight(flightId,origin,destination,departureTime,arrivalTime,capacity,price);
-        allFlights.add(temp);
-        System.out.println("\nFlight added successfully!");
-        FileHandler.saveFlights(allFlights, "flights.txt");
-    }
-
-    public static void removeFlight(String flightId) {
-         if (!allFlights.isEmpty()){
-            boolean flag = true;
-            for (int i = 0; i < allFlights.size(); i++) {
-                if (allFlights.get(i).getFlightId().equals(flightId)) {
-                    for (int j = 0; j < allPassengers.size(); j++) {
-                        if (allPassengers.get(j).getBookedFlights().contains(flightId)) {
-                            allPassengers.get(j).setWallet(allPassengers.get(j).getWallet() + allFlights.get(i).getPrice());
-                            allPassengers.get(j).getBookedFlights().remove(flightId);
-                        }
+                } else if (choice==3) {
+                    airlineService.viewBookedFlights(airlineService.currentPassenger);
+                } else if (choice == 4) {
+                    if (airlineService.viewBookedFlights(airlineService.currentPassenger)) {
+                        System.out.print("\n\nEnter flight ID you want to cancel: ");
+                        String cTicketNumber = scanner.next();
+                        airlineService.cancelTicket(cTicketNumber);
                     }
-                    System.out.println("\nFlight has been successfully removed.\n\nFlight ID      : " + allFlights.get(i).getFlightId() + "\nFrom           : " + allFlights.get(i).getOrigin() + "\nTo             : " + allFlights.get(i).getDestination() + "\nDeparture Time : " + allFlights.get(i).getDepartureTime() + "\nArrival Time   : " + allFlights.get(i).getArrivalTime());
-                    allFlights.remove(i);
-                    FileHandler.saveFlights(allFlights, "flights.txt");
-                    flag = false;
+                } else if (choice == 5) {
+                    System.out.println("\nYour wallet balance: " + airlineService.currentPassenger.getWallet() + "$\n");
+                } else if (choice == 6) {
+                    System.out.print("Enter the amount you want to recharge: ");
+                    double walletNumber = scanner.nextDouble();
+                    airlineService.currentPassenger.rechargeWallet(walletNumber);
+                } else if (choice == 7) {
                     break;
+                } else {
+                    System.out.println("\nNumber must be between 1 and 6!\n");
                 }
+            } else {
+                System.out.println("\nYou should enter an Integer number!\n");
+                scanner.next();
             }
-            if (flag) {
-                System.out.println("\nFlight not found.");
+        }
+    }
+    void admin(Scanner scanner){
+        while (true) {
+            adminMenu();
+            if (scanner.hasNextInt()) {
+                int adminChoice = scanner.nextInt();
+                if (adminChoice==1){
+                    scanner.nextLine();
+                    System.out.print("Enter flight ID: ");
+                    String newFlightId=scanner.nextLine();
+                    System.out.print("Enter origin: ");
+                    String newOrigin=scanner.nextLine();
+                    System.out.print("Enter destination: ");
+                    String newDestination=scanner.nextLine();
+                    System.out.print("Enter departureTime: ");
+                    String newDepartureTime=scanner.nextLine();
+                    System.out.print("Enter arrivalTime: ");
+                    String newArrivalTime=scanner.nextLine();
+                    System.out.print("Enter capacity: ");
+                    int newCapacity=scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter price: ");
+                    double newPrice=scanner.nextDouble();
+                    scanner.nextLine();
+                    airlineService.addFlight(newFlightId,newOrigin,newDestination,newDepartureTime,newArrivalTime,newCapacity,newPrice);
+                } else if (adminChoice==2) {
+                    if (airlineService.viewFlights()){
+                        System.out.print("\nEnter the flight ID you want to remove: ");
+                        String id = scanner.next();
+                        airlineService.removeFlight(id);
+                    }
+                } else if (adminChoice == 3) {
+                    airlineService.viewFlights();
+                } else if (adminChoice == 4) {
+                    System.out.println(airlineService.viewRegisteredPassengers());
+                } else if (adminChoice==5) {
+                    break;
+                } else {
+                    System.out.println("\nNumber must be between 1 and 5!\n");
+                }
+
+            } else {
+                System.out.println("\nYou should enter an Integer number!\n");
+                scanner.next();
             }
 
         }
     }
-
-    public static String viewRegisteredPassengers(){
-        System.out.println();
-        if (allPassengers.isEmpty()){
-            return "\nNo passengers have registered yet.";
-        }
-        StringBuilder sb=new StringBuilder();
-        for (int i = 0; i < allPassengers.size(); i++) {
-            Passenger p= allPassengers.get(i);
-            sb.append("Passenger ").append(i + 1).append("\n");
-            sb.append("Full Name     : ").append(p.getFullName()).append("\n");
-            sb.append("Phone         : ").append(p.getPhoneNumber()).append("\n");
-            sb.append("Address       : ").append(p.getAddress()).append("\n");
-            sb.append("Wallet        : ").append(p.getWallet()).append("$\n");
-            if (p.getBookedFlights().isEmpty()){
-                sb.append("Booked Flights: None\n");
-            }else {
-                sb.append("Booked Flights:\n");
-                for (int j = 0; j < p.getBookedFlights().size(); j++) {
-                    sb.append("   - ").append(p.getBookedFlights().get(j)).append("\n");
+    public void start(){
+        while (true) {
+            menu();
+            int listNumber;
+            try {
+                listNumber = scanner.nextInt();
+                if (listNumber < 1 || listNumber > 4) {
+                    System.out.println("\t\t\t\t\t Number must be between 1 and 4\n");
+                    continue;
                 }
+            } catch (InputMismatchException e) {
+                System.out.println("\t\t\t\t\t You should enter an Integer number\n");
+                scanner.next();
+                continue;
             }
-            if (i < allPassengers.size() - 1) {
-                sb.append("--------------------------------------\n");
-            }
-        }
-        return sb.toString();
-    }
-
-    public static boolean viewBookedFlights(Passenger passenger){
-        System.out.println("\n");
-        if (passenger.getBookedFlights().isEmpty()) {
-            System.out.println("You have no booked flights.");
-            return false;
-        }
-        System.out.println("Your booked flights:\n");
-        for (int i = 0; i < passenger.getBookedFlights().size(); i++) {
-            String bookedId = passenger.getBookedFlights().get(i);
-            for (int j = 0; j < allFlights.size(); j++) {
-                if (allFlights.get(j).getFlightId().equals(bookedId)) {
-                    Flight f = allFlights.get(j);
-                    System.out.printf(" - %-10s | %-13s -> %-13s | Departure: %-21s | Arrival: %-21s | Price: %-9f$\n",
-                            f.getFlightId(),
-                            f.getOrigin(),
-                            f.getDestination(),
-                            f.getDepartureTime(),
-                            f.getArrivalTime(),
-                            f.getPrice()
-                    );
+            System.out.println();
+            displayArtWork(listNumber);
+            if (listNumber == 1) {
+                System.out.print("Enter your phone number: ");
+                String ph = scanner.next();
+                System.out.print("Enter your password: ");
+                String p = scanner.next();
+                if (airlineService.passengerLogin(ph, p)) {
+                    System.out.println("\nWelcome " + airlineService.currentPassenger.getFullName() + "\n");
+                    passenger(scanner);
+                } else {
+                    System.out.println("\nPhone number and/or password are/is incorrect\n");
                 }
+            } else if (listNumber == 2) {
+                createPassengr(scanner);
+            } else if (listNumber == 3) {
+                System.out.print("Enter your phone number: ");
+                String adminPh = scanner.next();
+                System.out.print("Enter your password: ");
+                String adminP = scanner.next();
+                Admin admin=new Admin(adminPh,adminP);
+                if (admin.adminLogin(adminPh, adminP)) {
+                    admin(scanner);
+                } else {
+                    System.out.println("\nPhone number and/or password are/is incorrect\n");
+                }
+
+            } else {
+                break;
             }
         }
-        return true;
     }
 }

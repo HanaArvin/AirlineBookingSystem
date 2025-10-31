@@ -1,3 +1,0 @@
-+14155552671,Emm@2025,Emma Johnson,123 Main St,  New York,450.0,IR-432
-+447911123456,L1am$mith,Liam Smith,45 Park Ave,  London,850.5,
-+819012345678,S0ph!aB,Sophia Brown,78 Oak St,  Tokyo,450.0,AF-101

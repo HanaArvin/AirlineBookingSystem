@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,4 +58,12 @@ public class Passenger {
         return getPhoneNumber().equals(phoneNumber) && getPassword().equals(password);
     }
 
+    public  void rechargeWallet(double amount){
+        if (amount<=0){
+            System.out.println("\nPlease enter a positive number.");
+            return;
+        }
+        this.wallet +=amount;
+        System.out.println("\nWallet recharged successfully.\n");
+    }
 }

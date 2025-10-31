@@ -1,3 +1,5 @@
+package model;
+
 public class Flight {
     private String flightId;
     private String origin;
